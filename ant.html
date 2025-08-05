@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>자동 움직이는 말</title>
+  <style>
+    #counter {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    #board {
+      display: grid;
+      grid-template-columns: repeat(100, 10px);
+      grid-template-rows: repeat(100, 10px);
+    }
+
+    .cell {
+      width: 10px;
+      height: 10px;
+      background-color: white;
+      border: 1px solid #ddd;
+      box-sizing: border-box;
+    }
+
+    .player {
+      background-color: red !important;
+    }
+
+    .gray {
+      background-color: gray !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🔹 여기가 추가된 부분 -->
+  <div id="counter">이동 횟수: 0</div>
+
+  <div id="board"></div>
+
+  <script>
+    const board = document.getElementById("board");
+    const counter = document.getElementById("counter");
+    const SIZE = 100;
+    const cells = [];
+
+    for (let y = 0; y < SIZE; y++) {
+      cells[y] = [];
+      for (let x = 0; x < SIZE; x++) {
+        const cell = document.createElement("div");
+        cell.classList.add("cell");
+        board.appendChild(cell);
+        cells[y][x] = cell;
+      }
+    }
+
+    let x = 50, y = 50;
+    let dir = 0;
+    let moveCount = 0;
+
+    cells[y][x].classList.add("player");
+
+    const dx = [0, 1, 0, -1];
+    const dy = [-1, 0, 1, 0];
+
+    function move() {
+      const nextX = x + dx[dir];
+      const nextY = y + dy[dir];
+
+      if (nextX < 0 || nextX >= SIZE || nextY < 0 || nextY >= SIZE) {
+        clearInterval(timer);
+        alert("벽에 부딪혀 종료!");
+        return;
+      }
+
+      const current = cells[y][x];
+      if (current.classList.contains("gray")) {
+        current.classList.remove("gray");
+      } else {
+        current.classList.add("gray");
+      }
+      current.classList.remove("player");
+
+      x = nextX;
+      y = nextY;
+
+      const nextCell = cells[y][x];
+      dir = nextCell.classList.contains("gray") ? (dir + 1) % 4 : (dir + 3) % 4;
+
+      moveCount++;
+      counter.textContent = `이동 횟수: ${moveCount}`;
+      nextCell.classList.add("player");
+    }
+
+    const timer = setInterval(move, 1);
+  </script>
+</body>
+</html>
