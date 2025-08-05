@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>텍스트 입력 및 출력</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    #container {
+      display: flex;
+      gap: 20px;
+    }
+    #input-area {
+      flex: 1;
+    }
+    #output-area {
+      flex: 1;
+      border: 1px solid #ddd;
+      padding: 10px;
+      min-height: 200px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      background: #f9f9f9;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+  <h2>텍스트 입력 후 엔터를 누르면 옆에 쌓이는 페이지</h2>
+  <div id="container">
+    <div id="input-area">
+      <input type="text" id="textInput" placeholder="텍스트 입력 후 엔터를 누르세요" autofocus />
+    </div>
+    <div id="output-area" tabindex="0" aria-label="입력된 텍스트 목록"></div>
+  </div>
+
+  <script>
+    const input = document.getElementById('textInput');
+    const output = document.getElementById('output-area');
+
+    input.addEventListener('keydown', (event) => {
+      if(event.key === 'Enter') {
+        const text = input.value.trim();
+        if(text) {
+          const newLine = document.createElement('div');
+          newLine.textContent = text;
+          output.appendChild(newLine);
+          input.value = '';
+          // 스크롤을 맨 아래로
+          output.scrollTop = output.scrollHeight;
+        }
+      }
+    });
+  </script>
+</body>
+</html>
